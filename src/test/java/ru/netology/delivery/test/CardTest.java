@@ -30,8 +30,7 @@ class CardTest {
 
 
         $("[data-test-id='city'] input").setValue(validUser.getCity());
-        $("[data-test-id = 'date'] input").doubleClick();
-        $("[data-test-id=date] input").sendKeys(Keys.SHIFT, Keys.HOME, Keys.BACK_SPACE);
+        $("[data-test-id= 'date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $("[data-test-id = 'date'] input").setValue(firstMeetingDate);
         $x("//input[@name='name']").setValue(validUser.getName());
         $x("//input[@name='phone']").setValue(validUser.getPhone());
@@ -39,14 +38,14 @@ class CardTest {
         $x("//span[@class='button__text']").click();
         $x("//*[contains(text(),'Успешно!')]").shouldBe(Condition.visible, Duration.ofSeconds(15));
         $("[class='notification__content']")
-                .shouldHave(Condition.text("Встреча успешно запланирована на "));
-        $x("//input[@placeholder='Дата встречи']").sendKeys(Keys.SHIFT, Keys.HOME, Keys.BACK_SPACE);
-        $x("//span[@class='button__text']").click();
-        $x("//button[contains(@class,'button')]").click();
+                .shouldHave(Condition.text("Встреча успешно запланирована на " + firstMeetingDate));
+        $("[data-test-id= 'date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
         $x("//input[@placeholder='Дата встречи']").setValue(secondMeetingDate);
         $x("//span[@class='button__text']").click();
-        $x("//*[contains(text(),'Успешно!')]")
-                .shouldBe(Condition.visible, Duration.ofSeconds(15));
+        $x("//span[@class='button__text']").click();
+        $x("//*[contains(text(),'У вас уже запланирована встреча на другую дату. Перепланировать?')]").shouldBe(Condition.visible);
+        $x("//button[@type='button']/span[.='Перепланировать']").click();
         $("[class='notification__content']").shouldHave(Condition.exactText("Встреча успешно запланирована на " + secondMeetingDate));
+
     }
 }
